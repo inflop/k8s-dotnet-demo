@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-webapi
+  labels:
+    app: kube-webapi
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kube-webapi
+  template:
+    metadata:
+      labels:
+        app: kube-webapi
+    spec:
+      containers:
+      - name: kube-webapi
+        image: kube.webapi
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        env:
+        - name: DatabaseApiUrl
+          valueFrom:
+            configMapKeyRef:
+              name: kube-webapi
+              key: databaseApiUrl
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1

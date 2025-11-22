@@ -1,0 +1,37 @@
+appName: kube-webapp
+
+deployment:
+  replicaCount: 2
+  container:
+    image:
+      name: kube.webapp
+      tag: latest
+      pullPolicy: Never
+    port: 80
+
+service:
+  type: ClusterIP
+  port: 8082
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+
+configMap:
+  todoApiAddress: http://kube-webapi
+  todoApiPort: 8081
+
+ingress:
+  className: nginx
+  host: localhost
+  pathType: Prefix
+  path: /
+  service:
+    name: kube-webapp
+    port: 8082

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-webapp
+  labels:
+    app: kube-webapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kube-webapp
+  template:
+    metadata:
+      labels:
+        app: kube-webapp
+    spec:
+      containers:
+      - name: kube-webapp
+        image: kube.webapp
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+        env:
+        - name: TodoApiUrl
+          valueFrom:
+            configMapKeyRef:
+              name: kube-webapp
+              key: todoApiUrl
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1

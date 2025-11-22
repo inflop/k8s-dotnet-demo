@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-database-api
+  labels:
+    app: kube-database-api # matches the service selector
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kube-database-api
+  template:
+    metadata:
+      labels:
+        app: kube-database-api
+    spec:
+      containers:
+      - name: kube-database-api
+        image: kube.database.api
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        env:
+        - name: ConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: kube-database-api
+              key: connectionString
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1

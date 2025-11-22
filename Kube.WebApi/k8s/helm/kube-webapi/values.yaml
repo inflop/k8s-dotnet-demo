@@ -1,0 +1,28 @@
+appName: kube-webapi
+
+deployment:
+  replicaCount: 3
+  container:
+    image:
+      name: kube.webapi
+      tag: latest
+      pullPolicy: Never
+    port: 80
+
+service:
+  type: ClusterIP
+  port: 8081
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+
+configMap:
+  databaseApiAddress: http://kube-database-api
+  databaseApiPort: 8080

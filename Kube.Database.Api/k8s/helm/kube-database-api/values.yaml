@@ -1,0 +1,28 @@
+appName: kube-database-api
+
+deployment:
+  replicaCount: 3
+  container:
+    image:
+      name: kube.database.api
+      tag: latest
+      pullPolicy: Never
+    port: 80
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+
+secret:
+  type: Opaque
+  connectionString: RGF0YSBTb3VyY2U9aG9zdC5kb2NrZXIuaW50ZXJuYWw7SW5pdGlhbCBDYXRhbG9nPXRvZG9fZGI7VXNlciBJZD1zYTtQYXNzd29yZD1ZT1VSX1BBU1NXT1JEX0hFUkU7RW5saXN0PWZhbHNlO1RydXN0U2VydmVyQ2VydGlmaWNhdGU9dHJ1ZQ==
